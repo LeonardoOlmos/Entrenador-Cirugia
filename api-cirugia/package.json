@@ -1,0 +1,20 @@
+{
+  "name": "api-cirugia",
+  "version": "1.0.0",
+  "description": "Proyecto Departamento Cirugía - UNAM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Leonardo Olmos",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
