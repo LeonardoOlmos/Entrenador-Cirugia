@@ -1,5 +1,6 @@
 'use strict'
 
+const spawn = require('child_process').spawn;
 const Cirujano = require('./Cirujano.js');
 
 exports.getCirujanos = (req, res) => {
@@ -28,13 +29,15 @@ exports.newCirujano = (req,res) =>
    console.log('POST /api/cirujano');
    console.log(req.body);
 
-   let cirujano = new Cirujano(req.body);
+   let cirujano = new Cirujano(req.body.cirujano);
 
    cirujano.save((err,cirujanostored) =>{ 
-    if (err) 
+    if (err){ 
+        console.log(err);
         res.status(500).send ({message: `Error al guardar en la base de datos: ${err}`});
-
-    res.status(200).send({cirujano: cirujanostored});
+    }
+    else
+        res.status(200).send({cirujano: cirujanostored});
 });
 }
 
@@ -63,4 +66,35 @@ exports.deleteCirujano = (req, res) =>
         res.status(200).send({message: `Se elimino el registro.`});
         });
     });
+}
+
+exports.logIn = (req, res) => {
+    let usuario = req.body.usuario;
+    console.log(usuario);
+    Cirujano.findOne ({'usuario' : usuario.usuario}, (err, cirujano) => {
+        if (err) {
+            //console.log(err);
+            res.status(500).send({message: `Error al iniciar sesión: ${err}`});}
+        else {
+            console.log(cirujano);
+            if (cirujano){
+             if (usuario.contrasena == cirujano.contrasena){
+                 res.json({exito:true,  message: 'Inicio exitoso',_id:cirujano._id, usuario:cirujano.usuario})
+                                                             }
+             else{
+                res.json({exito:false, message: 'Error: Contraseña incorrecta'})
+                }
+                        }
+            else{
+                res.json({exito:false, message: 'Error: Usuario incorrecto'})
+                 }
+        }
+    });
+}  
+
+exports.getPrograma = (req, res) =>
+{    
+    const camaras = spawn('Camaras2.exe',[req.params.cirujanoId]);
+
+    res.json({message: 'Exito'})
 }
